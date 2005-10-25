@@ -1,0 +1,7 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Catalyst-Plugin-HTML-Scrubber.t
+lib/Catalyst/Plugin/HTML/Scrubber.pm
+META.yml                                 Module meta-data (added by MakeMaker)
