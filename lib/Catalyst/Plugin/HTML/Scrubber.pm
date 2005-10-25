@@ -5,7 +5,7 @@ use base qw/Class::Data::Inheritable/;
 
 use HTML::Scrubber;
 
-our $VERSION = '0.1';
+our $VERSION = '0.01';
 
 __PACKAGE__->mk_classdata('_scrubber');
 
