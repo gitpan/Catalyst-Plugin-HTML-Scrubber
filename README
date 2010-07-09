@@ -1,27 +1,27 @@
-Catalyst-Plugin-HTML-Scrubber version 0.01
-==========================================
+This is Perl module Catalyst::Plugin::HTML::Scrubber.
 
 INSTALLATION
 
-To install this module type the following:
+Catalyst::Plugin::HTML::Scrubber installation is straightforward. If your CPAN shell is set up,
+you should just be able to do
 
-   perl Makefile.PL
-   make
-   make test
-   make install
+    % cpan Catalyst::Plugin::HTML::Scrubber
 
-DEPENDENCIES
+Download it, unpack it, then build it as per the usual:
 
-This module requires these other modules and libraries:
+    % perl Makefile.PL
+    % make && make test
 
-  Catalyst
-  HTML::Scrubber
+Then install it:
 
-COPYRIGHT AND LICENCE
+    % make install
 
-Put the correct copyright and licence information here.
+DOCUMENTATION
 
-Copyright (C) 2005 by Hideo Kimura
+Catalyst::Plugin::HTML::Scrubber documentation is available as in POD. So you can do:
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+    % perldoc Catalyst::Plugin::HTML::Scrubber
+
+to read the documentation online with your favorite pager.
+
+Hideo Kimura

@@ -1,39 +1,58 @@
 package Catalyst::Plugin::HTML::Scrubber;
 
-use strict;
-use base qw/Class::Data::Inheritable/;
+use Moose;
+use namespace::autoclean;
 
+with 'Catalyst::ClassData';
+
+use MRO::Compat;
 use HTML::Scrubber;
 
-our $VERSION = '0.01';
-
 __PACKAGE__->mk_classdata('_scrubber');
+
+our $VERSION = '0.02';
 
 sub setup {
     my $c = shift;
 
-    if ($c->config->{scrubber}) {
-        my @conf = @{$c->config->{scrubber}};
-        $c->_scrubber(HTML::Scrubber->new(@conf));
+    my $conf = $c->config->{scrubber};
+    if (ref $conf eq 'ARRAY') {
+        $c->_scrubber(HTML::Scrubber->new(@$conf));
+    } elsif (ref $conf eq 'HASH') {
+        $c->config->{scrubber}{auto} = 1
+            unless defined $c->config->{scrubber}{auto};
+        $c->_scrubber(HTML::Scrubber->new(@{$conf->{params}}));
     } else {
         $c->_scrubber(HTML::Scrubber->new());
     }
 
-    return $c->NEXT::setup(@_);
+    return $c->maybe::next::method(@_);
 }
 
 sub prepare_parameters {
     my $c = shift;
-    $c->NEXT::prepare_parameters;
-    
-    for my $value ( values %{ $c->request->{parameters} } ) {
-        if ( ref $value && ref $value ne 'ARRAY' ) {
-            next;
-        }
-        
-        $_ = $c->_scrubber->scrub($_) for ( ref($value) ? @{$value} : $value );
+
+    $c->maybe::next::method(@_);
+
+    my $conf = $c->config->{scrubber};
+    if (ref $conf ne 'HASH' || $conf->{auto}) {
+        $c->html_scrub;
     }
 }
+
+sub html_scrub {
+    my $c = shift;
+
+    for my $value (values %{$c->request->{parameters}}) {
+        if (ref $value && ref $value ne 'ARRAY') {
+            next;
+        }
+
+        $_ = $c->_scrubber->scrub($_) for (ref($value) ? @{$value} : $value);
+    }
+}
+
+__PACKAGE__->meta->make_immutable;
 
 1;
 __END__
@@ -70,6 +89,10 @@ On request, sanitize HTML tags in all params.
 You can use options of L<HTML::Scrubber>.
 
 =item prepare_parameters
+
+Sanitize HTML tags in all parameters.
+
+=item html_scrub
 
 Sanitize HTML tags in all parameters.
 
